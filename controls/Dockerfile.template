@@ -1,0 +1,10 @@
+FROM balenalib/%%BALENA_ARCH%%-alpine:latest
+
+RUN apk add --no-cache docker
+
+COPY ./setFw.sh /usr/src/app/setFw.sh
+RUN chmod +x /usr/src/app/setFw.sh
+
+WORKDIR /usr/src/app
+
+CMD ["sh", "-c", "/usr/src/app/setFw.sh"]

@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+  balena-hello-world:
+    build: .
+    ports:
+      - "80:80"
+      - "8080:80"
+    networks:
+      - my_bridge
+      - my_macvlan
+  balena-hello-controls:
+    build: ./controls
+    privileged: true
+    volumes:
+      - /proc:/proc
+    labels:
+      io.balena.features.procfs: '1'
+      io.balena.features.balena-socket: '1'
+    network_mode: "none"
+
+networks:
+  my_macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: box0.10
+    ipam:
+      config:
+        - ip_range: 10.0.10.2/29
+          subnet: 10.0.10.0/24
+          gateway: 10.0.10.1
+  my_bridge:
+    driver: bridge
